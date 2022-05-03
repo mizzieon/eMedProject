@@ -1,4 +1,5 @@
-const makeStyles = () => {
+const makeStyles = (file) => {
+    const uploadButtonColor = file ? "green" : "1565C0"
     return {
         container: {
             height: "60vh",
@@ -20,6 +21,19 @@ const makeStyles = () => {
             rowGap: "5px",
             width: "80%",
             margin: "20px 0 0 0",
+        },
+        buttonGroup: {
+            display: "grid",
+            gridTemplateColumns: "auto auto",
+            justifyContent: "center",
+            columnGap: "10px",
+            rowGap: "5px",
+        },
+        prompt: {
+            gridColumn: "span 2"
+        },
+        uploadButton: {
+            backgroundColor: uploadButtonColor,
         }
     }
 }

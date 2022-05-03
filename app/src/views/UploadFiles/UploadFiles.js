@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Input, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ function UploadFiles(props) {
   const [modifiedFileData, setModifiedFileData] = useState(null);
   const [newFile, setNewFile] = useState(null);
   const navigate = useNavigate();
-  const styles = makeStyles();
+  const styles = makeStyles(file);
 
   // useEffect(() => {
   //   if (modifiedFileData) {
@@ -88,10 +88,17 @@ function UploadFiles(props) {
           <Typography align='center' variant='h5'>Drag files here</Typography>
           <Typography align='center'>or</Typography>
           <Box sx={styles.form}>
-            <Typography align='center'>Select a file to upload</Typography>
-            <input type="file" id='file' onChange={onFileChange} />
-            <button onClick={onFileUpload}>Upload</button>
-            {/* <a href={newFile} download={"info.text"}>Download the new file</a> */}
+            <Box sx={styles.buttonGroup}>
+              <Typography align='center' sx={styles.prompt}>{file ? file.name : "Select a file to upload"}</Typography>
+              <label htmlFor='contained-button-file-2'>
+                <Input id="contained-button-file-2" type="file" sx={{ display: "none" }} onChange={onFileChange} />
+                <Button variant='contained' component='span'>Select File</Button>
+              </label>
+              {/* <input type="file" id='file' onChange={onFileChange} /> */}
+              <Button variant='contained' onClick={onFileUpload} sx={styles.uploadButton}>Upload</Button>
+              {/* <button onClick={onFileUpload}>Upload</button> */}
+              {/* <a href={newFile} download={"info.text"}>Download the new file</a> */}
+            </Box>
           </Box>
         </Box>
       </Box>
