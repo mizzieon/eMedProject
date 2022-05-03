@@ -1,7 +1,9 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
+import makeStyles from './styles';
+import Paper from '@mui/material/Paper';
 
 function UploadFiles(props) {
   const { uploadAction } = props;
@@ -10,6 +12,7 @@ function UploadFiles(props) {
   const [modifiedFileData, setModifiedFileData] = useState(null);
   const [newFile, setNewFile] = useState(null);
   const navigate = useNavigate();
+  const styles = makeStyles();
 
   // useEffect(() => {
   //   if (modifiedFileData) {
@@ -22,13 +25,13 @@ function UploadFiles(props) {
   // }, [modifiedFileData]);
 
   useEffect(() => {
-    if(fileContent && modifiedFileData){
+    if (fileContent && modifiedFileData) {
       uploadAction({
         original: {
           name: file.name,
           data: fileContent,
         },
-        modified:{
+        modified: {
           name: "modified.txt",
           data: modifiedFileData,
         }
@@ -36,7 +39,7 @@ function UploadFiles(props) {
 
       navigate("/view");
     }
-  },[fileContent, modifiedFileData])
+  }, [fileContent, modifiedFileData])
 
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -80,10 +83,18 @@ function UploadFiles(props) {
   return (
     <Box>
       <Header />
-      upload files
-      <input type="file" id='file' onChange={onFileChange} />
-      <button onClick={onFileUpload}>Upload</button>
-      {/* <a href={newFile} download={"info.text"}>Download the new file</a> */}
+      <Box sx={styles.container} >
+        <Box sx={styles.uploadContainer} component={Paper} >
+          <Typography align='center' variant='h5'>Drag files here</Typography>
+          <Typography align='center'>or</Typography>
+          <Box sx={styles.form}>
+            <Typography align='center'>Select a file to upload</Typography>
+            <input type="file" id='file' onChange={onFileChange} />
+            <button onClick={onFileUpload}>Upload</button>
+            {/* <a href={newFile} download={"info.text"}>Download the new file</a> */}
+          </Box>
+        </Box>
+      </Box>
     </Box>
   )
 }
