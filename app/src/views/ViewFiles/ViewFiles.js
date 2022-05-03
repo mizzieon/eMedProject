@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import Header from '../../components/Header/Header';
 import Table from '@mui/material/Table';
@@ -9,10 +9,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import makeStyles from './styles';
+import { Link } from 'react-router-dom';
 
 function ViewFiles(props) {
   const { files, updateIndex, link } = props;
-  const styles = makeStyles();
+  const styles = makeStyles(files);
 
   const onRowHover = (event) => {
     updateIndex(event.currentTarget.dataset.index);
@@ -23,7 +24,9 @@ function ViewFiles(props) {
       <Header />
       <Box sx={styles.contentContainer}>
         <Box sx={styles.filesContainer}>
-          <TableContainer component={Paper}>
+          <Typography sx={styles.prompt} align='center'>No files yet! <Link to='/'>Click here to upload files</Link></Typography>
+          <Typography sx={styles.prompt2} align='center'><Link to='/'>Upload More</Link></Typography>
+          <TableContainer component={Paper} sx={styles.tableContainer}>
             <Table aria-label="simple table">
               <TableHead>
                 <TableRow>
@@ -40,13 +43,14 @@ function ViewFiles(props) {
                     key={index}
                     data-index={index}
                     onMouseOver={onRowHover}
+                    sx={styles.tableRow}
                   >
                     <TableCell>
                       {item.original.name}
                     </TableCell>
                     <TableCell >{item.modified.name}</TableCell>
-                    <TableCell ></TableCell>
-                    <TableCell ></TableCell>
+                    <TableCell >{item.original.size}</TableCell>
+                    <TableCell >{item.original.count}</TableCell>
                     <TableCell ><a href={link?.data} download={link?.filename}>Download</a></TableCell>
                   </TableRow>
                 ))}

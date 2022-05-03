@@ -1,5 +1,6 @@
 const makeStyles = (file) => {
-    const uploadButtonColor = file ? "green" : "1565C0"
+    const uploadButtonColor = file ? "green" : "#1976D2";
+    const textInputDisplay = file ? "block" : "none";
     return {
         container: {
             height: "60vh",
@@ -13,7 +14,7 @@ const makeStyles = (file) => {
             alignItems: "center",
             width: "300px",
             height: "200px",
-            padding: "10px",
+            padding: "20px",
         },
         form: {
             display: "flex",
@@ -27,13 +28,20 @@ const makeStyles = (file) => {
             gridTemplateColumns: "auto auto",
             justifyContent: "center",
             columnGap: "10px",
-            rowGap: "5px",
+            rowGap: "10px",
         },
         prompt: {
-            gridColumn: "span 2"
+            gridColumn: "span 2",
+        },
+        prompt2: {
+
         },
         uploadButton: {
             backgroundColor: uploadButtonColor,
+        },
+        textInput: {
+            gridColumn: "span 2",
+            display: textInputDisplay,
         }
     }
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Input, Typography } from '@mui/material';
+import { Box, Button, Input, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
@@ -11,8 +11,10 @@ function UploadFiles(props) {
   const [fileContent, setFileContent] = useState(null);
   const [modifiedFileData, setModifiedFileData] = useState(null);
   const [newFile, setNewFile] = useState(null);
+  const [newName, setNewName] = useState("");
   const navigate = useNavigate();
   const styles = makeStyles(file);
+  const textFieldElement = document.querySelector("#nameInput");
 
   // useEffect(() => {
   //   if (modifiedFileData) {
@@ -24,15 +26,19 @@ function UploadFiles(props) {
   //   }
   // }, [modifiedFileData]);
 
+  /* adds the file data to our main array in App.js 
+  then redirects to the view page*/
   useEffect(() => {
     if (fileContent && modifiedFileData) {
       uploadAction({
         original: {
           name: file.name,
           data: fileContent,
+          size: file.size,
+          count: fileContent.length,
         },
         modified: {
-          name: "modified.txt",
+          name: newName,
           data: modifiedFileData,
         }
       });
@@ -41,10 +47,23 @@ function UploadFiles(props) {
     }
   }, [fileContent, modifiedFileData])
 
+  /* gives focus to the text input when a 
+  file has been uploaded */
+  useEffect(() => {
+    if(file){
+      textFieldElement.focus();
+    }
+  }, [file])
+
+  /* stores file in state,
+  sets input to default filename */
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
+    setNewName(event.target.files[0].name)
   }
 
+  /* creates a copy of the original data, modifies
+  the copy, saves result in state */
   const onFileUpload = () => {
     var reader = new FileReader();
     reader.onload = (ProgressEvent) => {
@@ -80,6 +99,10 @@ function UploadFiles(props) {
     reader.readAsText(file);
   }
 
+  const onTextInputChanged = (event) => {
+    setNewName(event.target.value);
+  }
+
   return (
     <Box>
       <Header />
@@ -89,7 +112,8 @@ function UploadFiles(props) {
           <Typography align='center'>or</Typography>
           <Box sx={styles.form}>
             <Box sx={styles.buttonGroup}>
-              <Typography align='center' sx={styles.prompt}>{file ? file.name : "Select a file to upload"}</Typography>
+              <Typography align='center' sx={styles.prompt}>Select a file to upload</Typography>
+              <TextField id='nameInput' variant="standard" label="New File Name" sx={styles.textInput} value={newName} onChange={onTextInputChanged}></TextField>
               <label htmlFor='contained-button-file-2'>
                 <Input id="contained-button-file-2" type="file" sx={{ display: "none" }} onChange={onFileChange} />
                 <Button variant='contained' component='span'>Select File</Button>
