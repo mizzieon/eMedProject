@@ -1,21 +1,32 @@
 import { Box } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-function UploadFiles() {
+function UploadFiles(props) {
+  const { uploadAction } = props;
   const [file, setFile] = useState(null);
   const [modifiedFileData, setModifiedFileData] = useState(null);
   const [newFile, setNewFile] = useState(null);
+
+  useEffect(() => {
+    if(modifiedFileData){
+      if(newFile){
+        window.URL.revokeObjectURL(newFile);
+      }
+
+      setNewFile(window.URL.createObjectURL(modifiedFileData));
+    }
+  }, [modifiedFileData])
 
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
   }
 
   const onFileUpload = () => {
-    console.log(file);
     var reader = new FileReader();
     reader.onload = (ProgressEvent) => {
       var fileContentArray = reader.result.split("\n");
       console.log(`Original Array Length: ${fileContentArray.length}`);
+
       const stringArray = fileContentArray.toString();
       let convertedArray = [...fileContentArray];
 
@@ -24,18 +35,11 @@ function UploadFiles() {
         convertedArray[i + 1] = convertedArray [i];
         convertedArray[i] = tempValue;
       }
-      setModifiedFileData(new Blob([fileContentArray.buffer], {type: 'text/plain'}));
       
-      if(newFile){
-        window.URL.revokeObjectURL(newFile);
-      }
-
-      setNewFile(window.URL.createObjectURL(new Blob([convertedArray.toString().replaceAll(",","\n")], {type: 'text/plain'})));
-
-
-
-      console.log(stringArray.replaceAll(",","\n"));
-      console.log(`Converted Array: ${convertedArray.toString().replaceAll(",","\n")}`);
+      setModifiedFileData(new Blob([convertedArray.toString().replaceAll(",","\n")], {type: 'text/plain'}));
+      
+      // console.log(stringArray.replaceAll(",","\n"));
+      // console.log(`Converted Array: ${convertedArray.toString().replaceAll(",","\n")}`);
       // for(var line of fileContentArray){
       //   console.log(line);
       // }
