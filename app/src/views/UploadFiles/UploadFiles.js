@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 
 function UploadFiles() {
   const [file, setFile] = useState(null);
-  const [modifiedFile, setModifiedFile] = useState(null);
+  const [modifiedFileData, setModifiedFileData] = useState(null);
+  const [newFile, setNewFile] = useState(null);
 
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -17,15 +18,24 @@ function UploadFiles() {
       console.log(`Original Array Length: ${fileContentArray.length}`);
       const stringArray = fileContentArray.toString();
       let convertedArray = [...fileContentArray];
+
       for(var i = 0; i <= convertedArray.length - 2; i+=2){
         let tempValue = convertedArray[i + 1];
         convertedArray[i + 1] = convertedArray [i];
         convertedArray[i] = tempValue;
       }
+      setModifiedFileData(new Blob([fileContentArray.buffer], {type: 'text/plain'}));
+      
+      if(newFile){
+        window.URL.revokeObjectURL(newFile);
+      }
+
+      setNewFile(window.URL.createObjectURL(new Blob([convertedArray.toString().replaceAll(",","\n")], {type: 'text/plain'})));
 
 
-      console.log(stringArray);
-      console.log(`Converted Array: ${convertedArray.toString()}`);
+
+      console.log(stringArray.replaceAll(",","\n"));
+      console.log(`Converted Array: ${convertedArray.toString().replaceAll(",","\n")}`);
       // for(var line of fileContentArray){
       //   console.log(line);
       // }
@@ -38,6 +48,7 @@ function UploadFiles() {
       upload files
       <input type="file" id='file' onChange={onFileChange} />
       <button onClick={onFileUpload}>Upload</button>
+      <a href={newFile} download={"info.text"}>Download the new file</a>
     </Box>
   )
 }

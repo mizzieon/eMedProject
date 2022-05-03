@@ -8,6 +8,10 @@ import ViewFiles from './views/ViewFiles/ViewFiles';
 function App() {
   const [files, setFiles] = useState([]);
 
+  const onFileUploaded = (newFileData) => {
+
+  }
+
   return (
     <Routes>
       <Route path='/' element={<UploadFiles />}></Route>
