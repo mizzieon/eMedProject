@@ -24,7 +24,7 @@ const makeStyles = (files) => {
             padding: "5px",
         },
         tableRow: {
-            [':hover']: {
+            ':hover': {
                 backgroundColor: '#1976D2',
                 td: {
                     color: "white",

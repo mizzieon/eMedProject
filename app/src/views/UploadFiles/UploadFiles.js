@@ -10,24 +10,15 @@ function UploadFiles(props) {
   const [file, setFile] = useState(null);
   const [fileContent, setFileContent] = useState(null);
   const [modifiedFileData, setModifiedFileData] = useState(null);
-  const [newFile, setNewFile] = useState(null);
   const [newName, setNewName] = useState("");
   const navigate = useNavigate();
   const styles = makeStyles(file);
   const textFieldElement = document.querySelector("#nameInput");
 
-  // useEffect(() => {
-  //   if (modifiedFileData) {
-  //     if (newFile) {
-  //       window.URL.revokeObjectURL(newFile);
-  //     }
 
-  //     setNewFile(window.URL.createObjectURL(modifiedFileData));
-  //   }
-  // }, [modifiedFileData]);
-
-  /* adds the file data to our main array in App.js 
-  then redirects to the view page*/
+  /* sends the new file data to the main array
+  in App.js once the conversions are complete.
+  redirects to View page afterwards */
   useEffect(() => {
     if (fileContent && modifiedFileData) {
       uploadAction({
@@ -55,6 +46,8 @@ function UploadFiles(props) {
     }
   }, [file])
 
+  /* drag and drop only worked when assigning event handlers
+  this way */
   useEffect(() => {
     let container = document.querySelector("#container");
     container.addEventListener("dragover", onDragEvent);
@@ -72,9 +65,9 @@ function UploadFiles(props) {
     event.preventDefault();
   }
 
+  /* gets the file from the drop event and saves
+  in it in state */
   const onDropEvent = (event) => {
-    let input = document.querySelector("#contained-button-file-2");
-    // input.files = event.dataTransfer.files;
     setFile(event.dataTransfer.files[0]);
     setNewName(event.dataTransfer.files[0].name);
 
@@ -82,38 +75,22 @@ function UploadFiles(props) {
   }
 
   /* creates a copy of the original data, modifies
-  the copy, saves result in state */
+  the copy, saves new version in state */
   const onFileUpload = () => {
     var reader = new FileReader();
     reader.onload = (ProgressEvent) => {
+      //convert original conent into an array
       var fileContentArray = reader.result.split("\n");
       setFileContent(fileContentArray);
-      console.log(`Original Array Length: ${fileContentArray.length}`);
 
-      const stringArray = fileContentArray.toString();
-      console.log(`String Array: ${stringArray}`);
+      //duplicate and modify original array
       let convertedArray = [...fileContentArray];
-
       for (var i = 0; i <= convertedArray.length - 2; i += 2) {
         let tempValue = convertedArray[i + 1];
         convertedArray[i + 1] = convertedArray[i];
         convertedArray[i] = tempValue;
       }
       setModifiedFileData(convertedArray);
-
-      // setModifiedFileData(new Blob([convertedArray.toString().replaceAll(",", "\n")], { type: 'text/plain' }));
-
-      // console.log(stringArray.replaceAll(",","\n"));
-      // console.log(`Converted Array: ${convertedArray.toString().replaceAll(",","\n")}`);
-      // for(var line of fileContentArray){
-      //   console.log(line);
-      // }
-
-      //store into main array
-      // uploadAction({
-      //   original: 6,
-      //   modified: 5,
-      // })
     }
     reader.readAsText(file);
   }
@@ -125,7 +102,7 @@ function UploadFiles(props) {
   return (
     <Box>
       <Header />
-      <Box id='container' sx={styles.container} inputProps={{ondragenter: onDragEvent, ondrop: onDropEvent}} onDragEnter={onDragEvent} onDrop={onDropEvent}>
+      <Box id='container' sx={styles.container}>
         <Box sx={styles.uploadContainer} component={Paper} >
           <Typography align='center' variant='h5'>Drag files here</Typography>
           <Typography align='center'>or</Typography>
@@ -137,10 +114,7 @@ function UploadFiles(props) {
                 <Input id="contained-button-file-2" type="file" sx={{ display: "none" }} onChange={onFileChange} />
                 <Button variant='contained' component='span'>Select File</Button>
               </label>
-              {/* <input type="file" id='file' onChange={onFileChange} /> */}
               <Button variant='contained' onClick={onFileUpload} sx={styles.uploadButton}>Upload</Button>
-              {/* <button onClick={onFileUpload}>Upload</button> */}
-              {/* <a href={newFile} download={"info.text"}>Download the new file</a> */}
             </Box>
           </Box>
         </Box>

@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
@@ -10,6 +9,8 @@ function App() {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [currentLinkData, setCurrentLinkData] = useState(null);
 
+  /* updates the object url to reflect whichever one is
+  in focus. */
   useEffect(() => {
     if(currentIndex){
       const file = new Blob([files[currentIndex].modified.data.toString().replaceAll(",", "\n")], { type: 'text/plain' });
@@ -23,10 +24,14 @@ function App() {
     }
   }, [currentIndex, files])
 
+  /* called by children to transfer file data
+  to this components state */
   const onFileUploaded = (data) => {
     setFiles([...files, data]);
   }
 
+  /* called by rows in the results table
+  to know which item to give the user */
   const changeIndex = (index) => {
     setCurrentIndex(index);
   }
