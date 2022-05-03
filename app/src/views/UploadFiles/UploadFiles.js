@@ -55,11 +55,30 @@ function UploadFiles(props) {
     }
   }, [file])
 
+  useEffect(() => {
+    let container = document.querySelector("#container");
+    container.addEventListener("dragover", onDragEvent);
+    container.addEventListener("drop", onDropEvent);
+  }, [])
+
   /* stores file in state,
   sets input to default filename */
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
     setNewName(event.target.files[0].name)
+  }
+
+  const onDragEvent = (event) => {
+    event.preventDefault();
+  }
+
+  const onDropEvent = (event) => {
+    let input = document.querySelector("#contained-button-file-2");
+    // input.files = event.dataTransfer.files;
+    setFile(event.dataTransfer.files[0]);
+    setNewName(event.dataTransfer.files[0].name);
+
+    event.preventDefault();
   }
 
   /* creates a copy of the original data, modifies
@@ -106,7 +125,7 @@ function UploadFiles(props) {
   return (
     <Box>
       <Header />
-      <Box sx={styles.container} >
+      <Box id='container' sx={styles.container} inputProps={{ondragenter: onDragEvent, ondrop: onDropEvent}} onDragEnter={onDragEvent} onDrop={onDropEvent}>
         <Box sx={styles.uploadContainer} component={Paper} >
           <Typography align='center' variant='h5'>Drag files here</Typography>
           <Typography align='center'>or</Typography>
